@@ -44,3 +44,7 @@
 </figure>
 
 <p><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>
+
+<script>
+import { db } from '../../init-firebase.js';
+</script>
