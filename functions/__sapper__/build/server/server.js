@@ -15,149 +15,6 @@ var Url = _interopDefault(require('url'));
 var https = _interopDefault(require('https'));
 var zlib = _interopDefault(require('zlib'));
 
-// Ordinarily, you'd generate this data from markdown files in your
-// repo, or fetch them from a database of some kind. But in order to
-// avoid unnecessary dependencies in the starter template, and in the
-// service of obviousness, we're just going to leave it here.
-
-// This file is called `_posts.js` rather than `posts.js`, because
-// we don't want to create an `/blog/posts` route — the leading
-// underscore tells Sapper not to do that.
-
-const posts = [
-	{
-		title: 'What is Sapper?',
-		slug: 'what-is-sapper',
-		html: `
-			<p>First, you have to know what <a href='https://svelte.dev'>Svelte</a> is. Svelte is a UI framework with a bold new idea: rather than providing a library that you write code with (like React or Vue, for example), it's a compiler that turns your components into highly optimized vanilla JavaScript. If you haven't already read the <a href='https://svelte.dev/blog/frameworks-without-the-framework'>introductory blog post</a>, you should!</p>
-
-			<p>Sapper is a Next.js-style framework (<a href='blog/how-is-sapper-different-from-next'>more on that here</a>) built around Svelte. It makes it embarrassingly easy to create extremely high performance web apps. Out of the box, you get:</p>
-
-			<ul>
-				<li>Code-splitting, dynamic imports and hot module replacement, powered by webpack</li>
-				<li>Server-side rendering (SSR) with client-side hydration</li>
-				<li>Service worker for offline support, and all the PWA bells and whistles</li>
-				<li>The nicest development experience you've ever had, or your money back</li>
-			</ul>
-
-			<p>It's implemented as Express middleware. Everything is set up and waiting for you to get started, but you keep complete control over the server, service worker, webpack config and everything else, so it's as flexible as you need it to be.</p>
-		`
-	},
-
-	{
-		title: 'How to use Sapper',
-		slug: 'how-to-use-sapper',
-		html: `
-			<h2>Step one</h2>
-			<p>Create a new project, using <a href='https://github.com/Rich-Harris/degit'>degit</a>:</p>
-
-			<pre><code>npx degit "sveltejs/sapper-template#rollup" my-app
-			cd my-app
-			npm install # or yarn!
-			npm run dev
-			</code></pre>
-
-			<h2>Step two</h2>
-			<p>Go to <a href='http://localhost:3000'>localhost:3000</a>. Open <code>my-app</code> in your editor. Edit the files in the <code>src/routes</code> directory or add new ones.</p>
-
-			<h2>Step three</h2>
-			<p>...</p>
-
-			<h2>Step four</h2>
-			<p>Resist overdone joke formats.</p>
-		`
-	},
-
-	{
-		title: 'Why the name?',
-		slug: 'why-the-name',
-		html: `
-			<p>In war, the soldiers who build bridges, repair roads, clear minefields and conduct demolitions — all under combat conditions — are known as <em>sappers</em>.</p>
-
-			<p>For web developers, the stakes are generally lower than those for combat engineers. But we face our own hostile environment: underpowered devices, poor network connections, and the complexity inherent in front-end engineering. Sapper, which is short for <strong>S</strong>velte <strong>app</strong> mak<strong>er</strong>, is your courageous and dutiful ally.</p>
-		`
-	},
-
-	{
-		title: 'How is Sapper different from Next.js?',
-		slug: 'how-is-sapper-different-from-next',
-		html: `
-			<p><a href='https://github.com/zeit/next.js'>Next.js</a> is a React framework from <a href='https://vercel.com/'>Vercel</a>, and is the inspiration for Sapper. There are a few notable differences, however:</p>
-
-			<ul>
-				<li>It's powered by <a href='https://svelte.dev'>Svelte</a> instead of React, so it's faster and your apps are smaller</li>
-				<li>Instead of route masking, we encode route parameters in filenames. For example, the page you're looking at right now is <code>src/routes/blog/[slug].svelte</code></li>
-				<li>As well as pages (Svelte components, which render on server or client), you can create <em>server routes</em> in your <code>routes</code> directory. These are just <code>.js</code> files that export functions corresponding to HTTP methods, and receive Express <code>request</code> and <code>response</code> objects as arguments. This makes it very easy to, for example, add a JSON API such as the one <a href='blog/how-is-sapper-different-from-next.json'>powering this very page</a></li>
-				<li>Links are just <code>&lt;a&gt;</code> elements, rather than framework-specific <code>&lt;Link&gt;</code> components. That means, for example, that <a href='blog/how-can-i-get-involved'>this link right here</a>, despite being inside a blob of HTML, works with the router as you'd expect.</li>
-			</ul>
-		`
-	},
-
-	{
-		title: 'How can I get involved?',
-		slug: 'how-can-i-get-involved',
-		html: `
-			<p>We're so glad you asked! Come on over to the <a href='https://github.com/sveltejs/svelte'>Svelte</a> and <a href='https://github.com/sveltejs/sapper'>Sapper</a> repos, and join us in the <a href='https://svelte.dev/chat'>Discord chatroom</a>. Everyone is welcome, especially you!</p>
-		`
-	}
-];
-
-posts.forEach(post => {
-	post.html = post.html.replace(/^\t{3}/gm, '');
-});
-
-const contents = JSON.stringify(posts.map(post => {
-	return {
-		title: post.title,
-		slug: post.slug
-	};
-}));
-
-function get(req, res) {
-	res.writeHead(200, {
-		'Content-Type': 'application/json'
-	});
-
-	res.end(contents);
-}
-
-var route_0 = /*#__PURE__*/Object.freeze({
-	__proto__: null,
-	get: get
-});
-
-const lookup = new Map();
-posts.forEach(post => {
-	lookup.set(post.slug, JSON.stringify(post));
-});
-
-function get$1(req, res, next) {
-	// the `slug` parameter is available because
-	// this file is called [slug].json.js
-	const { slug } = req.params;
-
-	if (lookup.has(slug)) {
-		res.writeHead(200, {
-			'Content-Type': 'application/json'
-		});
-
-		res.end(lookup.get(slug));
-	} else {
-		res.writeHead(404, {
-			'Content-Type': 'application/json'
-		});
-
-		res.end(JSON.stringify({
-			message: `Not found`
-		}));
-	}
-}
-
-var route_1 = /*#__PURE__*/Object.freeze({
-	__proto__: null,
-	get: get$1
-});
-
 function noop() { }
 function run(fn) {
     return fn();
@@ -196,13 +53,6 @@ const escaped = {
 };
 function escape(html) {
     return String(html).replace(/["'&<>]/g, match => escaped[match]);
-}
-function each(items, fn) {
-    let str = '';
-    for (let i = 0; i < items.length; i += 1) {
-        str += fn(items[i], i);
-    }
-    return str;
 }
 const missing_component = {
     $$render: () => ''
@@ -251,179 +101,52 @@ function create_ssr_component(fn) {
         $$render
     };
 }
-function add_attribute(name, value, boolean) {
-    if (value == null || (boolean && !value))
-        return '';
-    return ` ${name}${value === true ? '' : `=${typeof value === 'string' ? JSON.stringify(escape(value)) : `"${value}"`}`}`;
-}
 
 /* src\routes\index.svelte generated by Svelte v3.23.2 */
 
-const css = {
-	code: "h1.svelte-1kk9opm,figure.svelte-1kk9opm,p.svelte-1kk9opm{text-align:center;margin:0 auto}h1.svelte-1kk9opm{font-size:2.8em;text-transform:uppercase;font-weight:700;margin:0 0 0.5em 0}figure.svelte-1kk9opm{margin:0 0 1em 0}img.svelte-1kk9opm{width:100%;max-width:400px;margin:0 0 1em 0}p.svelte-1kk9opm{margin:1em auto}@media(min-width: 480px){h1.svelte-1kk9opm{font-size:4em}}",
-	map: "{\"version\":3,\"file\":\"index.svelte\",\"sources\":[\"index.svelte\"],\"sourcesContent\":[\"<style>\\r\\n\\th1, figure, p {\\r\\n\\t\\ttext-align: center;\\r\\n\\t\\tmargin: 0 auto;\\r\\n\\t}\\r\\n\\r\\n\\th1 {\\r\\n\\t\\tfont-size: 2.8em;\\r\\n\\t\\ttext-transform: uppercase;\\r\\n\\t\\tfont-weight: 700;\\r\\n\\t\\tmargin: 0 0 0.5em 0;\\r\\n\\t}\\r\\n\\r\\n\\tfigure {\\r\\n\\t\\tmargin: 0 0 1em 0;\\r\\n\\t}\\r\\n\\r\\n\\timg {\\r\\n\\t\\twidth: 100%;\\r\\n\\t\\tmax-width: 400px;\\r\\n\\t\\tmargin: 0 0 1em 0;\\r\\n\\t}\\r\\n\\r\\n\\tp {\\r\\n\\t\\tmargin: 1em auto;\\r\\n\\t}\\r\\n\\r\\n\\t@media (min-width: 480px) {\\r\\n\\t\\th1 {\\r\\n\\t\\t\\tfont-size: 4em;\\r\\n\\t\\t}\\r\\n\\t}\\r\\n</style>\\r\\n\\r\\n<svelte:head>\\r\\n\\t<title>Sapper project template</title>\\r\\n</svelte:head>\\r\\n\\r\\n<h1>Great success!</h1>\\r\\n\\r\\n<figure>\\r\\n\\t<img alt='Success Kid' src='successkid.jpg'>\\r\\n\\t<figcaption>Have fun with Sapper!</figcaption>\\r\\n</figure>\\r\\n\\r\\n<p><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>\\r\\n\"],\"names\":[],\"mappings\":\"AACC,iBAAE,CAAE,qBAAM,CAAE,CAAC,eAAC,CAAC,AACd,UAAU,CAAE,MAAM,CAClB,MAAM,CAAE,CAAC,CAAC,IAAI,AACf,CAAC,AAED,EAAE,eAAC,CAAC,AACH,SAAS,CAAE,KAAK,CAChB,cAAc,CAAE,SAAS,CACzB,WAAW,CAAE,GAAG,CAChB,MAAM,CAAE,CAAC,CAAC,CAAC,CAAC,KAAK,CAAC,CAAC,AACpB,CAAC,AAED,MAAM,eAAC,CAAC,AACP,MAAM,CAAE,CAAC,CAAC,CAAC,CAAC,GAAG,CAAC,CAAC,AAClB,CAAC,AAED,GAAG,eAAC,CAAC,AACJ,KAAK,CAAE,IAAI,CACX,SAAS,CAAE,KAAK,CAChB,MAAM,CAAE,CAAC,CAAC,CAAC,CAAC,GAAG,CAAC,CAAC,AAClB,CAAC,AAED,CAAC,eAAC,CAAC,AACF,MAAM,CAAE,GAAG,CAAC,IAAI,AACjB,CAAC,AAED,MAAM,AAAC,YAAY,KAAK,CAAC,AAAC,CAAC,AAC1B,EAAE,eAAC,CAAC,AACH,SAAS,CAAE,GAAG,AACf,CAAC,AACF,CAAC\"}"
-};
-
 const Routes = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
-	$$result.css.add(css);
-
-	return `${($$result.head += `${($$result.title = `<title>Sapper project template</title>`, "")}`, "")}
-
-<h1 class="${"svelte-1kk9opm"}">Great success!</h1>
-
-<figure class="${"svelte-1kk9opm"}"><img alt="${"Success Kid"}" src="${"successkid.jpg"}" class="${"svelte-1kk9opm"}">
-	<figcaption>Have fun with Sapper!</figcaption></figure>
-
-<p class="${"svelte-1kk9opm"}"><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>`;
-});
-
-/* src\routes\about.svelte generated by Svelte v3.23.2 */
-
-const About = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
-	return `${($$result.head += `${($$result.title = `<title>About</title>`, "")}`, "")}
-
-<h1>About this site</h1>
-
-<p>This is the &#39;about&#39; page. There&#39;s not much here.</p>`;
-});
-
-/* src\routes\blog\index.svelte generated by Svelte v3.23.2 */
-
-const css$1 = {
-	code: "ul.svelte-1frg2tf{margin:0 0 1em 0;line-height:1.5}",
-	map: "{\"version\":3,\"file\":\"index.svelte\",\"sources\":[\"index.svelte\"],\"sourcesContent\":[\"<script context=\\\"module\\\">\\r\\n\\texport function preload({ params, query }) {\\r\\n\\t\\treturn this.fetch(`blog.json`).then(r => r.json()).then(posts => {\\r\\n\\t\\t\\treturn { posts };\\r\\n\\t\\t});\\r\\n\\t}\\r\\n</script>\\r\\n\\r\\n<script>\\r\\n\\texport let posts;\\r\\n</script>\\r\\n\\r\\n<style>\\r\\n\\tul {\\r\\n\\t\\tmargin: 0 0 1em 0;\\r\\n\\t\\tline-height: 1.5;\\r\\n\\t}\\r\\n</style>\\r\\n\\r\\n<svelte:head>\\r\\n\\t<title>Blog</title>\\r\\n</svelte:head>\\r\\n\\r\\n<h1>Recent posts</h1>\\r\\n\\r\\n<ul>\\r\\n\\t{#each posts as post}\\r\\n\\t\\t<!-- we're using the non-standard `rel=prefetch` attribute to\\r\\n\\t\\t\\t\\ttell Sapper to load the data for the page as soon as\\r\\n\\t\\t\\t\\tthe user hovers over the link or taps it, instead of\\r\\n\\t\\t\\t\\twaiting for the 'click' event -->\\r\\n\\t\\t<li><a rel='prefetch' href='blog/{post.slug}'>{post.title}</a></li>\\r\\n\\t{/each}\\r\\n</ul>\"],\"names\":[],\"mappings\":\"AAaC,EAAE,eAAC,CAAC,AACH,MAAM,CAAE,CAAC,CAAC,CAAC,CAAC,GAAG,CAAC,CAAC,CACjB,WAAW,CAAE,GAAG,AACjB,CAAC\"}"
-};
-
-function preload({ params, query }) {
-	return this.fetch(`blog.json`).then(r => r.json()).then(posts => {
-		return { posts };
-	});
-}
-
-const Blog = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
-	let { posts } = $$props;
-	if ($$props.posts === void 0 && $$bindings.posts && posts !== void 0) $$bindings.posts(posts);
-	$$result.css.add(css$1);
-
-	return `${($$result.head += `${($$result.title = `<title>Blog</title>`, "")}`, "")}
-
-<h1>Recent posts</h1>
-
-<ul class="${"svelte-1frg2tf"}">${each(posts, post => `
-		<li><a rel="${"prefetch"}" href="${"blog/" + escape(post.slug)}">${escape(post.title)}</a></li>`)}</ul>`;
-});
-
-/* src\routes\blog\[slug].svelte generated by Svelte v3.23.2 */
-
-const css$2 = {
-	code: ".content.svelte-gnxal1 h2{font-size:1.4em;font-weight:500}.content.svelte-gnxal1 pre{background-color:#f9f9f9;box-shadow:inset 1px 1px 5px rgba(0,0,0,0.05);padding:0.5em;border-radius:2px;overflow-x:auto}.content.svelte-gnxal1 pre code{background-color:transparent;padding:0}.content.svelte-gnxal1 ul{line-height:1.5}.content.svelte-gnxal1 li{margin:0 0 0.5em 0}",
-	map: "{\"version\":3,\"file\":\"[slug].svelte\",\"sources\":[\"[slug].svelte\"],\"sourcesContent\":[\"<script context=\\\"module\\\">\\r\\n\\texport async function preload({ params, query }) {\\r\\n\\t\\t// the `slug` parameter is available because\\r\\n\\t\\t// this file is called [slug].svelte\\r\\n\\t\\tconst res = await this.fetch(`blog/${params.slug}.json`);\\r\\n\\t\\tconst data = await res.json();\\r\\n\\r\\n\\t\\tif (res.status === 200) {\\r\\n\\t\\t\\treturn { post: data };\\r\\n\\t\\t} else {\\r\\n\\t\\t\\tthis.error(res.status, data.message);\\r\\n\\t\\t}\\r\\n\\t}\\r\\n</script>\\r\\n\\r\\n<script>\\r\\n\\texport let post;\\r\\n</script>\\r\\n\\r\\n<style>\\r\\n\\t/*\\r\\n\\t\\tBy default, CSS is locally scoped to the component,\\r\\n\\t\\tand any unused styles are dead-code-eliminated.\\r\\n\\t\\tIn this page, Svelte can't know which elements are\\r\\n\\t\\tgoing to appear inside the {{{post.html}}} block,\\r\\n\\t\\tso we have to use the :global(...) modifier to target\\r\\n\\t\\tall elements inside .content\\r\\n\\t*/\\r\\n\\t.content :global(h2) {\\r\\n\\t\\tfont-size: 1.4em;\\r\\n\\t\\tfont-weight: 500;\\r\\n\\t}\\r\\n\\r\\n\\t.content :global(pre) {\\r\\n\\t\\tbackground-color: #f9f9f9;\\r\\n\\t\\tbox-shadow: inset 1px 1px 5px rgba(0,0,0,0.05);\\r\\n\\t\\tpadding: 0.5em;\\r\\n\\t\\tborder-radius: 2px;\\r\\n\\t\\toverflow-x: auto;\\r\\n\\t}\\r\\n\\r\\n\\t.content :global(pre) :global(code) {\\r\\n\\t\\tbackground-color: transparent;\\r\\n\\t\\tpadding: 0;\\r\\n\\t}\\r\\n\\r\\n\\t.content :global(ul) {\\r\\n\\t\\tline-height: 1.5;\\r\\n\\t}\\r\\n\\r\\n\\t.content :global(li) {\\r\\n\\t\\tmargin: 0 0 0.5em 0;\\r\\n\\t}\\r\\n</style>\\r\\n\\r\\n<svelte:head>\\r\\n\\t<title>{post.title}</title>\\r\\n</svelte:head>\\r\\n\\r\\n<h1>{post.title}</h1>\\r\\n\\r\\n<div class='content'>\\r\\n\\t{@html post.html}\\r\\n</div>\\r\\n\"],\"names\":[],\"mappings\":\"AA4BC,sBAAQ,CAAC,AAAQ,EAAE,AAAE,CAAC,AACrB,SAAS,CAAE,KAAK,CAChB,WAAW,CAAE,GAAG,AACjB,CAAC,AAED,sBAAQ,CAAC,AAAQ,GAAG,AAAE,CAAC,AACtB,gBAAgB,CAAE,OAAO,CACzB,UAAU,CAAE,KAAK,CAAC,GAAG,CAAC,GAAG,CAAC,GAAG,CAAC,KAAK,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,IAAI,CAAC,CAC9C,OAAO,CAAE,KAAK,CACd,aAAa,CAAE,GAAG,CAClB,UAAU,CAAE,IAAI,AACjB,CAAC,AAED,sBAAQ,CAAC,AAAQ,GAAG,AAAC,CAAC,AAAQ,IAAI,AAAE,CAAC,AACpC,gBAAgB,CAAE,WAAW,CAC7B,OAAO,CAAE,CAAC,AACX,CAAC,AAED,sBAAQ,CAAC,AAAQ,EAAE,AAAE,CAAC,AACrB,WAAW,CAAE,GAAG,AACjB,CAAC,AAED,sBAAQ,CAAC,AAAQ,EAAE,AAAE,CAAC,AACrB,MAAM,CAAE,CAAC,CAAC,CAAC,CAAC,KAAK,CAAC,CAAC,AACpB,CAAC\"}"
-};
-
-async function preload$1({ params, query }) {
-	// the `slug` parameter is available because
-	// this file is called [slug].svelte
-	const res = await this.fetch(`blog/${params.slug}.json`);
-
-	const data = await res.json();
-
-	if (res.status === 200) {
-		return { post: data };
-	} else {
-		this.error(res.status, data.message);
-	}
-}
-
-const U5Bslugu5D = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
-	let { post } = $$props;
-	if ($$props.post === void 0 && $$bindings.post && post !== void 0) $$bindings.post(post);
-	$$result.css.add(css$2);
-
-	return `${($$result.head += `${($$result.title = `<title>${escape(post.title)}</title>`, "")}`, "")}
-
-<h1>${escape(post.title)}</h1>
-
-<div class="${"content svelte-gnxal1"}">${post.html}</div>`;
-});
-
-/* src\components\Nav.svelte generated by Svelte v3.23.2 */
-
-const css$3 = {
-	code: "nav.svelte-1dbd5up{border-bottom:1px solid rgba(255,62,0,0.1);font-weight:300;padding:0 1em}ul.svelte-1dbd5up{margin:0;padding:0}ul.svelte-1dbd5up::after{content:'';display:block;clear:both}li.svelte-1dbd5up{display:block;float:left}[aria-current].svelte-1dbd5up{position:relative;display:inline-block}[aria-current].svelte-1dbd5up::after{position:absolute;content:'';width:calc(100% - 1em);height:2px;background-color:rgb(255,62,0);display:block;bottom:-1px}a.svelte-1dbd5up{text-decoration:none;padding:1em 0.5em;display:block}",
-	map: "{\"version\":3,\"file\":\"Nav.svelte\",\"sources\":[\"Nav.svelte\"],\"sourcesContent\":[\"<script>\\r\\n\\texport let segment;\\r\\n</script>\\r\\n\\r\\n<style>\\r\\n\\tnav {\\r\\n\\t\\tborder-bottom: 1px solid rgba(255,62,0,0.1);\\r\\n\\t\\tfont-weight: 300;\\r\\n\\t\\tpadding: 0 1em;\\r\\n\\t}\\r\\n\\r\\n\\tul {\\r\\n\\t\\tmargin: 0;\\r\\n\\t\\tpadding: 0;\\r\\n\\t}\\r\\n\\r\\n\\t/* clearfix */\\r\\n\\tul::after {\\r\\n\\t\\tcontent: '';\\r\\n\\t\\tdisplay: block;\\r\\n\\t\\tclear: both;\\r\\n\\t}\\r\\n\\r\\n\\tli {\\r\\n\\t\\tdisplay: block;\\r\\n\\t\\tfloat: left;\\r\\n\\t}\\r\\n\\r\\n\\t[aria-current] {\\r\\n\\t\\tposition: relative;\\r\\n\\t\\tdisplay: inline-block;\\r\\n\\t}\\r\\n\\r\\n\\t[aria-current]::after {\\r\\n\\t\\tposition: absolute;\\r\\n\\t\\tcontent: '';\\r\\n\\t\\twidth: calc(100% - 1em);\\r\\n\\t\\theight: 2px;\\r\\n\\t\\tbackground-color: rgb(255,62,0);\\r\\n\\t\\tdisplay: block;\\r\\n\\t\\tbottom: -1px;\\r\\n\\t}\\r\\n\\r\\n\\ta {\\r\\n\\t\\ttext-decoration: none;\\r\\n\\t\\tpadding: 1em 0.5em;\\r\\n\\t\\tdisplay: block;\\r\\n\\t}\\r\\n</style>\\r\\n\\r\\n<nav>\\r\\n\\t<ul>\\r\\n\\t\\t<li><a aria-current=\\\"{segment === undefined ? 'page' : undefined}\\\" href=\\\".\\\">home</a></li>\\r\\n\\t\\t<li><a aria-current=\\\"{segment === 'about' ? 'page' : undefined}\\\" href=\\\"about\\\">about</a></li>\\r\\n\\r\\n\\t\\t<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches\\r\\n\\t\\t     the blog data when we hover over the link or tap it on a touchscreen -->\\r\\n\\t\\t<li><a rel=prefetch aria-current=\\\"{segment === 'blog' ? 'page' : undefined}\\\" href=\\\"blog\\\">blog</a></li>\\r\\n\\t</ul>\\r\\n</nav>\\r\\n\"],\"names\":[],\"mappings\":\"AAKC,GAAG,eAAC,CAAC,AACJ,aAAa,CAAE,GAAG,CAAC,KAAK,CAAC,KAAK,GAAG,CAAC,EAAE,CAAC,CAAC,CAAC,GAAG,CAAC,CAC3C,WAAW,CAAE,GAAG,CAChB,OAAO,CAAE,CAAC,CAAC,GAAG,AACf,CAAC,AAED,EAAE,eAAC,CAAC,AACH,MAAM,CAAE,CAAC,CACT,OAAO,CAAE,CAAC,AACX,CAAC,AAGD,iBAAE,OAAO,AAAC,CAAC,AACV,OAAO,CAAE,EAAE,CACX,OAAO,CAAE,KAAK,CACd,KAAK,CAAE,IAAI,AACZ,CAAC,AAED,EAAE,eAAC,CAAC,AACH,OAAO,CAAE,KAAK,CACd,KAAK,CAAE,IAAI,AACZ,CAAC,AAED,CAAC,YAAY,CAAC,eAAC,CAAC,AACf,QAAQ,CAAE,QAAQ,CAClB,OAAO,CAAE,YAAY,AACtB,CAAC,AAED,CAAC,YAAY,gBAAC,OAAO,AAAC,CAAC,AACtB,QAAQ,CAAE,QAAQ,CAClB,OAAO,CAAE,EAAE,CACX,KAAK,CAAE,KAAK,IAAI,CAAC,CAAC,CAAC,GAAG,CAAC,CACvB,MAAM,CAAE,GAAG,CACX,gBAAgB,CAAE,IAAI,GAAG,CAAC,EAAE,CAAC,CAAC,CAAC,CAC/B,OAAO,CAAE,KAAK,CACd,MAAM,CAAE,IAAI,AACb,CAAC,AAED,CAAC,eAAC,CAAC,AACF,eAAe,CAAE,IAAI,CACrB,OAAO,CAAE,GAAG,CAAC,KAAK,CAClB,OAAO,CAAE,KAAK,AACf,CAAC\"}"
-};
-
-const Nav = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
-	let { segment } = $$props;
-	if ($$props.segment === void 0 && $$bindings.segment && segment !== void 0) $$bindings.segment(segment);
-	$$result.css.add(css$3);
-
-	return `<nav class="${"svelte-1dbd5up"}"><ul class="${"svelte-1dbd5up"}"><li class="${"svelte-1dbd5up"}"><a${add_attribute("aria-current", segment === undefined ? "page" : undefined, 0)} href="${"."}" class="${"svelte-1dbd5up"}">home</a></li>
-		<li class="${"svelte-1dbd5up"}"><a${add_attribute("aria-current", segment === "about" ? "page" : undefined, 0)} href="${"about"}" class="${"svelte-1dbd5up"}">about</a></li>
-
-		
-		<li class="${"svelte-1dbd5up"}"><a rel="${"prefetch"}"${add_attribute("aria-current", segment === "blog" ? "page" : undefined, 0)} href="${"blog"}" class="${"svelte-1dbd5up"}">blog</a></li></ul></nav>`;
+	return ``;
 });
 
 /* src\routes\_layout.svelte generated by Svelte v3.23.2 */
 
-const css$4 = {
+const css = {
 	code: "main.svelte-1uhnsl8{position:relative;max-width:56em;background-color:white;padding:2em;margin:0 auto;box-sizing:border-box}",
-	map: "{\"version\":3,\"file\":\"_layout.svelte\",\"sources\":[\"_layout.svelte\"],\"sourcesContent\":[\"<script>\\r\\n\\timport Nav from '../components/Nav.svelte';\\r\\n\\r\\n\\texport let segment;\\r\\n</script>\\r\\n\\r\\n<style>\\r\\n\\tmain {\\r\\n\\t\\tposition: relative;\\r\\n\\t\\tmax-width: 56em;\\r\\n\\t\\tbackground-color: white;\\r\\n\\t\\tpadding: 2em;\\r\\n\\t\\tmargin: 0 auto;\\r\\n\\t\\tbox-sizing: border-box;\\r\\n\\t}\\r\\n</style>\\r\\n\\r\\n<Nav {segment}/>\\r\\n\\r\\n<main>\\r\\n\\t<slot></slot>\\r\\n</main>\"],\"names\":[],\"mappings\":\"AAOC,IAAI,eAAC,CAAC,AACL,QAAQ,CAAE,QAAQ,CAClB,SAAS,CAAE,IAAI,CACf,gBAAgB,CAAE,KAAK,CACvB,OAAO,CAAE,GAAG,CACZ,MAAM,CAAE,CAAC,CAAC,IAAI,CACd,UAAU,CAAE,UAAU,AACvB,CAAC\"}"
+	map: "{\"version\":3,\"file\":\"_layout.svelte\",\"sources\":[\"_layout.svelte\"],\"sourcesContent\":[\"<script>\\r\\n\\texport let segment;\\r\\n</script>\\r\\n\\r\\n<style>\\r\\n\\tmain {\\r\\n\\t\\tposition: relative;\\r\\n\\t\\tmax-width: 56em;\\r\\n\\t\\tbackground-color: white;\\r\\n\\t\\tpadding: 2em;\\r\\n\\t\\tmargin: 0 auto;\\r\\n\\t\\tbox-sizing: border-box;\\r\\n\\t}\\r\\n</style>\\r\\n\\r\\n<!-- <Nav> -->\\r\\n\\r\\n<main>\\r\\n\\t<slot></slot>\\r\\n</main>\"],\"names\":[],\"mappings\":\"AAKC,IAAI,eAAC,CAAC,AACL,QAAQ,CAAE,QAAQ,CAClB,SAAS,CAAE,IAAI,CACf,gBAAgB,CAAE,KAAK,CACvB,OAAO,CAAE,GAAG,CACZ,MAAM,CAAE,CAAC,CAAC,IAAI,CACd,UAAU,CAAE,UAAU,AACvB,CAAC\"}"
 };
 
 const Layout = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
 	let { segment } = $$props;
 	if ($$props.segment === void 0 && $$bindings.segment && segment !== void 0) $$bindings.segment(segment);
-	$$result.css.add(css$4);
+	$$result.css.add(css);
 
-	return `${validate_component(Nav, "Nav").$$render($$result, { segment }, {}, {})}
+	return `
 
 <main class="${"svelte-1uhnsl8"}">${$$slots.default ? $$slots.default({}) : ``}</main>`;
 });
 
 /* src\routes\_error.svelte generated by Svelte v3.23.2 */
 
-const css$5 = {
-	code: "h1.svelte-8od9u6,p.svelte-8od9u6{margin:0 auto}h1.svelte-8od9u6{font-size:2.8em;font-weight:700;margin:0 0 0.5em 0}p.svelte-8od9u6{margin:1em auto}@media(min-width: 480px){h1.svelte-8od9u6{font-size:4em}}",
-	map: "{\"version\":3,\"file\":\"_error.svelte\",\"sources\":[\"_error.svelte\"],\"sourcesContent\":[\"<script>\\r\\n\\texport let status;\\r\\n\\texport let error;\\r\\n\\r\\n\\tconst dev = undefined === 'development';\\r\\n</script>\\r\\n\\r\\n<style>\\r\\n\\th1, p {\\r\\n\\t\\tmargin: 0 auto;\\r\\n\\t}\\r\\n\\r\\n\\th1 {\\r\\n\\t\\tfont-size: 2.8em;\\r\\n\\t\\tfont-weight: 700;\\r\\n\\t\\tmargin: 0 0 0.5em 0;\\r\\n\\t}\\r\\n\\r\\n\\tp {\\r\\n\\t\\tmargin: 1em auto;\\r\\n\\t}\\r\\n\\r\\n\\t@media (min-width: 480px) {\\r\\n\\t\\th1 {\\r\\n\\t\\t\\tfont-size: 4em;\\r\\n\\t\\t}\\r\\n\\t}\\r\\n</style>\\r\\n\\r\\n<svelte:head>\\r\\n\\t<title>{status}</title>\\r\\n</svelte:head>\\r\\n\\r\\n<h1>{status}</h1>\\r\\n\\r\\n<p>{error.message}</p>\\r\\n\\r\\n{#if dev && error.stack}\\r\\n\\t<pre>{error.stack}</pre>\\r\\n{/if}\\r\\n\"],\"names\":[],\"mappings\":\"AAQC,gBAAE,CAAE,CAAC,cAAC,CAAC,AACN,MAAM,CAAE,CAAC,CAAC,IAAI,AACf,CAAC,AAED,EAAE,cAAC,CAAC,AACH,SAAS,CAAE,KAAK,CAChB,WAAW,CAAE,GAAG,CAChB,MAAM,CAAE,CAAC,CAAC,CAAC,CAAC,KAAK,CAAC,CAAC,AACpB,CAAC,AAED,CAAC,cAAC,CAAC,AACF,MAAM,CAAE,GAAG,CAAC,IAAI,AACjB,CAAC,AAED,MAAM,AAAC,YAAY,KAAK,CAAC,AAAC,CAAC,AAC1B,EAAE,cAAC,CAAC,AACH,SAAS,CAAE,GAAG,AACf,CAAC,AACF,CAAC\"}"
-};
-
 const Error$1 = create_ssr_component(($$result, $$props, $$bindings, $$slots) => {
 	let { status } = $$props;
 	let { error } = $$props;
 	if ($$props.status === void 0 && $$bindings.status && status !== void 0) $$bindings.status(status);
 	if ($$props.error === void 0 && $$bindings.error && error !== void 0) $$bindings.error(error);
-	$$result.css.add(css$5);
 
 	return `${($$result.head += `${($$result.title = `<title>${escape(status)}</title>`, "")}`, "")}
 
-<h1 class="${"svelte-8od9u6"}">${escape(status)}</h1>
+<h1>${escape(status)}</h1>
 
-<p class="${"svelte-8od9u6"}">${escape(error.message)}</p>
+<p>${escape(error.message)}</p>
 
 ${ ``}`;
 });
 
 // This file is generated by Sapper — do not edit it!
 
-const d = decodeURIComponent;
-
 const manifest = {
 	server_routes: [
-		{
-			// blog/index.json.js
-			pattern: /^\/blog\.json$/,
-			handlers: route_0,
-			params: () => ({})
-		},
-
-		{
-			// blog/[slug].json.js
-			pattern: /^\/blog\/([^\/]+?)\.json$/,
-			handlers: route_1,
-			params: match => ({ slug: d(match[1]) })
-		}
+		
 	],
 
 	pages: [
@@ -432,31 +155,6 @@ const manifest = {
 			pattern: /^\/$/,
 			parts: [
 				{ name: "index", file: "index.svelte", component: Routes }
-			]
-		},
-
-		{
-			// about.svelte
-			pattern: /^\/about\/?$/,
-			parts: [
-				{ name: "about", file: "about.svelte", component: About }
-			]
-		},
-
-		{
-			// blog/index.svelte
-			pattern: /^\/blog\/?$/,
-			parts: [
-				{ name: "blog", file: "blog/index.svelte", component: Blog, preload: preload }
-			]
-		},
-
-		{
-			// blog/[slug].svelte
-			pattern: /^\/blog\/([^\/]+?)\/?$/,
-			parts: [
-				null,
-				{ name: "blog_$slug", file: "blog/[slug].svelte", component: U5Bslugu5D, preload: preload$1, params: match => ({ slug: d(match[1]) }) }
 			]
 		}
 	],
@@ -3277,8 +2975,8 @@ function serve({ prefix, pathname, cache_control }
 function noop$1(){}
 
 var server = /*#__PURE__*/Object.freeze({
-	__proto__: null,
-	middleware: middleware
+    __proto__: null,
+    middleware: middleware
 });
 
 const { PORT, NODE_ENV } = process.env;
