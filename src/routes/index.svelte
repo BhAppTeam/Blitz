@@ -1,7 +1,27 @@
+<script>
+    import Profile from './Profile.svelte';
 
-<svelte:head>
-	<title>Sapper project template</title>
-</svelte:head>
+    import { auth, googleProvider } from './firebase';
+    import { authState } from 'rxfire/auth';
+
+    let user;
+
+    const unsubscribe = authState(auth).subscribe(u => user = u);
+
+    function login() {
+        auth.signInWithPopup(googleProvider);
+    }
+</script>
 
 
-<h1> Index</h1>
+<section>
+{#if user}
+    <Profile {...user} />
+    <button on:click={ () => auth.signOut() }>Logout</button>
+    <hr>
+{:else}
+	<button on:click={login}>
+		Signin with Google
+	</button>
+{/if}
+</section>

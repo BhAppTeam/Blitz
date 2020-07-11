@@ -17,7 +17,10 @@
   "dependencies": {
     "compression": "^1.7.1",
     "express": "^4.17.1",
+    "firebase": "^7.16.0",
     "polka": "^0.5.2",
+    "rxfire": "^3.13.5",
+    "rxjs": "^6.6.0",
     "sirv": "^0.4.0"
   },
   "devDependencies": {
