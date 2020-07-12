@@ -6,3 +6,4 @@ yarn-error.log
 /__sapper__/
 init-firebase.js
 .vscode
+src/routes/firebase.js
