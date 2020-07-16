@@ -2,7 +2,7 @@
     import Profile from './Profile.svelte';
 
     import { auth, googleProvider } from './firebase';
-    import { authState } from 'rxfire/auth';
+	import { authState } from 'rxfire/auth';
 
     let user;
 

@@ -1,9 +1,5 @@
-.DS_Store
 /node_modules/
-/src/node_modules/@sapper/
-yarn-error.log
-/cypress/screenshots/
-/__sapper__/
-init-firebase.js
-.vscode
-src/routes/firebase.js
+/public/build/
+src/firebaseconfig.js
+
+.DS_Store
