@@ -5,6 +5,7 @@
 
 <style  global>
   @import "../static/global.css";
+  @import 'bulma/css/bulma.css';
 </style>
 
 <Router {routes} />

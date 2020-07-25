@@ -1,4 +1,6 @@
+impor
 <script>
+    import Nav from '../components/Nav.svelte';
     import { auth, googleProvider } from '../firebase';
     import { authState } from 'rxfire/auth';
 
@@ -10,7 +12,6 @@
         auth.signInWithPopup(googleProvider);
     }
 </script>
-
 
 <section>
 {#if user}
