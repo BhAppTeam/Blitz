@@ -1,16 +1,14 @@
 <script>
+
     let isOpen = false;
     function toggleNav(){
         isOpen = !isOpen;
     }
 </script>
 
-<style>
-</style>
-
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a href="/" class="navbar-item">Logo</a>
+        <a href="../start" class="navbar-item">Logo</a>
         <span class="navbar-burger"
         class:is-active={isOpen}
         on:click={toggleNav}
@@ -24,7 +22,7 @@
 
     <div class="navbar-menu" class:is-active={isOpen}>
         <div class="navbar-start">
-            <a href="something1" class="navbar-item">Page1</a>
+            <a href="../profile" class="navbar-item">Profile</a>
             <a href="something2" class="navbar-item">Page2</a>
         </div>
 

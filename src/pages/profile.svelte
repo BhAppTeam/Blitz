@@ -1,16 +1,12 @@
-impor
 <script>
-    import Nav from '../components/Nav.svelte';
     import { auth, googleProvider } from '../firebase';
     import { authState } from 'rxfire/auth';
+    import { goto } from '@sveltech/routify';
 
     let user;
 
     authState(auth).subscribe(u => user = u);
 
-    function login() {
-        auth.signInWithPopup(googleProvider);
-    }
 </script>
 
 <section>
@@ -21,8 +17,8 @@ impor
     <button on:click={ () => auth.signOut() }>Logout</button>
     <hr>
 {:else}
-	<button on:click={login}>
-		Signin with Google
-	</button>
+    <!-- redirect to main login page -->
+    {$goto("../index")}
 {/if}
 </section>
+
