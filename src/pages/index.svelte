@@ -1,23 +1,27 @@
 <script>
-    import { auth, googleProvider } from '../firebase';
-    import { authState } from 'rxfire/auth';
     import { goto } from '@sveltech/routify';
+    import Login from '../components/Login.svelte';
     let user;
-
-    authState(auth).subscribe(u => user = u);
-
-    function login() {
-        auth.signInWithPopup(googleProvider);
-    }
 </script>
 
-<button on:click={login}>
-		Signin with Google
-</button>
+<style>
+    #centerall {
+        height: 100vh;
+        padding: 0;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 
-<section>
+
+<div id="centerall">
+    <Login bind:user/> <!-- need user variable to check status -->
+</div>
+
+
 {#if user}
     <!-- redirect to code-page -->
-    {$goto("../profile")}
+    {$goto("../start")}
 {/if}
-</section>

@@ -1,14 +1,27 @@
 <script>
+    import { auth } from '../firebase';
+    import { authState } from 'rxfire/auth';
+    import Logout from './Logout.svelte';
+    import { isActive } from '@sveltech/routify';
 
+    let user;
+    authState(auth).subscribe(u => user = u);
     let isOpen = false;
     function toggleNav(){
         isOpen = !isOpen;
     }
+
 </script>
 
-<nav class="navbar" role="navigation" aria-label="main navigation">
+
+
+<nav class="navbar" id="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
+    {#if user}
         <a href="../start" class="navbar-item">Logo</a>
+    {:else}
+        <a href="./" class="navbar-item">Logo</a>
+    {/if}
         <span class="navbar-burger"
         class:is-active={isOpen}
         on:click={toggleNav}
@@ -22,13 +35,18 @@
 
     <div class="navbar-menu" class:is-active={isOpen}>
         <div class="navbar-start">
-            <a href="../profile" class="navbar-item">Profile</a>
-            <a href="something2" class="navbar-item">Page2</a>
+            <a href="../profile" class="navbar-item" class:active={$isActive("../profile")}>Profile</a>
+            <a href="../about" class="navbar-item" class:active={$isActive("../about")}>About Us</a>
         </div>
 
         <div class="navbar-end">
-            <a href="/login" class="navbar-item"><button class="button is-success is-outlined">Login</button></a>
-            <a href="/logout" class="navbar-item"><button class="button is-danger is-outlined">Logout</button></a>
+            {#if !user}
+            <a href="./" class="navbar-item">
+                <button class="button is-success is-outlined" class:active={$isActive("./")}>
+                    Sign In
+                </button>
+            </a>
+            {/if}
         </div>
     </div>
 

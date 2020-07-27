@@ -3,6 +3,7 @@
     import { isActive } from '@sveltech/routify';
 </script>
 
+
 {#if !$isActive('./index')} <!-- Show navbar on all pages but index-->
 <Nav/>
 {/if}
