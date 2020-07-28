@@ -1,27 +1,40 @@
 <script>
     import { auth, googleProvider } from '../firebase';
     import { authState } from 'rxfire/auth';
+    import { goto } from '@sveltech/routify';
+    import Login from '../components/Login.svelte';
+    import Profile from '../components/Profile.svelte';
+    import Logout from '../components/Logout.svelte';
+
 
     let user;
 
     authState(auth).subscribe(u => user = u);
 
-    function login() {
-        auth.signInWithPopup(googleProvider);
-    }
 </script>
 
 
-<section>
 {#if user}
-    <h3>Hi { user.displayName }!</h3>
-    <img src={ user.photoURL } width="100" alt="user avatar">
-    <p>Your userID is { user.uid }</p>
-    <button on:click={ () => auth.signOut() }>Logout</button>
-    <hr>
+    <section class="section">
+        <Profile name={ user.displayName } photoSrc={ user.photoURL }/>
+    </section>
+    <div class="columns is-centered">
+        <div class="column has-text-centered">
+            <Logout />
+        </div>
+    </div>
 {:else}
-	<button on:click={login}>
-		Signin with Google
-	</button>
+    <!-- redirect to main login page if user is not logged in -->
+    <section class="section">
+
+    <h2 class="subtitle has-text-centered">You're not logged in.</h2>
+    <div class="columns is-centered mt-1">
+        <div class="column has-text-centered">
+            <Login/>
+        </div>
+    </div>
+
+    </section>
 {/if}
-</section>
+
+
