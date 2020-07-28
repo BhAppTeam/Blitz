@@ -22,6 +22,7 @@
     {:else}
         <a href="./" class="navbar-item">Logo</a>
     {/if}
+
         <span class="navbar-burger"
         class:is-active={isOpen}
         on:click={toggleNav}
@@ -34,7 +35,7 @@
     </div>
 
     <div class="navbar-menu" class:is-active={isOpen}>
-        <div class="navbar-joinEvent">
+        <div class="navbar-start">
             <a href="./joinEvent" class="navbar-item" class:active={$isActive("./joinEvent")}>Join Event</a>
             <a href="./createEvent" class="navbar-item" class:active={$isActive("./createEvent")}>Create Event</a>
 
