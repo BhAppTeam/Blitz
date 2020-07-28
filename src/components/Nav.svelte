@@ -15,7 +15,7 @@
 
 
 
-<nav class="navbar" id="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar is-primary" id="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
     {#if user}
         <a href="../joinEvent" class="navbar-item">Logo</a>

@@ -14,7 +14,7 @@
 </style>
 
 
-<section class="section">
+
 <div class="container">
     <div class="box">
         <h2 class="subtitle has-text-centered">{ name }</h2>
@@ -22,4 +22,3 @@
         
     </div>
 </div>
-</section>

@@ -15,7 +15,9 @@
 
 
 {#if user}
-    <Profile name={ user.displayName } photoSrc={ user.photoURL }/>
+    <section class="section">
+        <Profile name={ user.displayName } photoSrc={ user.photoURL }/>
+    </section>
     <div class="columns is-centered">
         <div class="column has-text-centered">
             <Logout />
