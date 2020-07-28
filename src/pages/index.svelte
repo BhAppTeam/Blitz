@@ -23,5 +23,5 @@
 
 {#if user}
     <!-- redirect to code-page -->
-    {$goto("../start")}
+    {$goto("../joinEvent")}
 {/if}
