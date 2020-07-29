@@ -1,5 +1,5 @@
 <script>
-    import { goto } from '@sveltech/routify';
+    import { redirect } from '@sveltech/routify';
     import Login from '../components/Login.svelte';
     let user;
 </script>
@@ -23,5 +23,5 @@
 
 {#if user}
     <!-- redirect to code-page -->
-    {$goto("../joinEvent")}
+    {$redirect("../joinEvent")}
 {/if}
