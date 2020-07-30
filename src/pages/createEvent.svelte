@@ -3,14 +3,25 @@
     import { auth, googleProvider } from '../firebase.js';
     import { authState } from 'rxfire/auth';
     let user;    
-
+    let title;
     authState(auth).subscribe(u => user = u);
 
-    const createEvent = () => {
+    const generateCode = () => {
+        var code = (Math.floor(Math.random() * 100000) + 1).toString();
+        var docRef = db.collection("events").doc(code);
+        docRef.get().then(function(doc) {
+            if (doc.exists) {
+                generateCode();
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
+        return code;
+    }
 
-        var title = "formValue";
-
-        db.collection('events').doc('1234').set({
+    const createEvent = async () => {
+        let eventCode = generateCode();
+        await db.collection('events').doc(eventCode).set({
             creator: user.uid,
             title: title,
         }).then(function() {
@@ -22,13 +33,12 @@
     }
 
 </script>
+<h2 class="subtitle is-3 is-centered"> Create your event.</h2>
 
-<h2 class="subtitle is-1"> Create an event.</h2>
-<form name="eventForm" id="eventForm">
+<div class="control">
+    <input class="input" type="text" bind:value={title} placeholder="Event Title" required>
+</div>
 
-  <label for="title">Title:</label><br>
-  <input type="text" id="title" name="title"><br>
-  <input type="submit" name="Submit" on:click={createEvent}>
-
-</form>
-
+<div class="control">
+    <button class="button is-primary" on:click={createEvent}>Submit</button>
+</div>
