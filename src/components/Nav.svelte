@@ -38,6 +38,8 @@
         <div class="navbar-start">
             <a href="./joinEvent" class="navbar-item" class:active={$isActive("./joinEvent")}>Join Event</a>
             <a href="./createEvent" class="navbar-item" class:active={$isActive("./createEvent")}>Create Event</a>
+            <a href="./events" class="navbar-item" class:active={$isActive("./events")}>Your Events</a>
+
 
             <a href="../profile" class="navbar-item" class:active={$isActive("../profile")}>Profile</a>
             <a href="../about" class="navbar-item" class:active={$isActive("../about")}>About Us</a>
